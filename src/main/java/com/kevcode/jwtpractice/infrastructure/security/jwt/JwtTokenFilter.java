@@ -1,7 +1,11 @@
 package com.kevcode.jwtpractice.infrastructure.security.jwt;
 
 
+import com.kevcode.jwtpractice.application.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -11,12 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
-    private final JwtProvider _jwtProvider;
-
     @Autowired
-    public JwtTokenFilter(JwtProvider jwtProvider) {
-        _jwtProvider = jwtProvider;
-    }
+    private JwtProvider _jwtProvider;
+    @Autowired
+    private UserDetailsServiceImpl _userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -24,11 +26,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         try {
             String token = this.getToken(request);
             if (token != null && _jwtProvider.validateToken(token)) {
-
+                String username = _jwtProvider.geUsernameFromToken(token);
+                UserDetails userDetails = _userDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
         } catch (Exception e) {
             throw e;
         }
+        filterChain.doFilter(request, response);
     }
 
     private String getToken(HttpServletRequest request) {

@@ -1,4 +1,4 @@
-package com.kevcode.jwtpractice.infrastructure.security.repository;
+package com.kevcode.jwtpractice.infrastructure.repository;
 
 import com.kevcode.jwtpractice.domain.security.entity.Role;
 import com.kevcode.jwtpractice.domain.security.enums.RoleName;

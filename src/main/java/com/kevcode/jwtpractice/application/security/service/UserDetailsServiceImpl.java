@@ -2,17 +2,19 @@ package com.kevcode.jwtpractice.application.security.service;
 
 import com.kevcode.jwtpractice.domain.security.entity.User;
 import com.kevcode.jwtpractice.infrastructure.security.entity.PrincipalUser;
-import com.kevcode.jwtpractice.infrastructure.security.repository.IUserRepository;
+import com.kevcode.jwtpractice.infrastructure.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
-public class UserDetailsServicesImpl implements UserDetailsService {
+@Service
+public class UserDetailsServiceImpl implements UserDetailsService {
     private final IUserRepository _userRepository;
 
     @Autowired
-    public UserDetailsServicesImpl(IUserRepository userRepository) {
+    public UserDetailsServiceImpl(IUserRepository userRepository) {
         _userRepository = userRepository;
     }
 
