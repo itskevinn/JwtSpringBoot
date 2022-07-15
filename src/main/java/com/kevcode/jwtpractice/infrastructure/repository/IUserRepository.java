@@ -1,4 +1,4 @@
-package com.kevcode.jwtpractice.infrastructure.security.repository;
+package com.kevcode.jwtpractice.infrastructure.repository;
 
 import com.kevcode.jwtpractice.domain.security.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

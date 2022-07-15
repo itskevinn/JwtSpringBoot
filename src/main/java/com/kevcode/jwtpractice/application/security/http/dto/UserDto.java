@@ -2,27 +2,20 @@ package com.kevcode.jwtpractice.application.security.http.dto;
 
 import com.kevcode.jwtpractice.domain.security.entity.Role;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
+
 @Data
 public class UserDto {
     private String username;
-    private Set<Role> roles = new HashSet<>();
+    private String bearer = "Bearer";
+    private String token;
+    private Collection<? extends GrantedAuthority> authorities;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
+    public UserDto(String username, String token, Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+        this.token = token;
+        this.authorities = authorities;
     }
 }

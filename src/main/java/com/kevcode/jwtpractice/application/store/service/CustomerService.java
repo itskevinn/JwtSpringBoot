@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import javax.transaction.Transactional;
 
@@ -38,12 +39,13 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public Response<CustomerDto> save(CustomerRequest customerRequest) throws UserAlreadyExistsException {
+    public Response<CustomerDto> save(CustomerRequest customerRequest, BindingResult bindingResult) throws UserAlreadyExistsException {
         try {
+            if (bindingResult.hasErrors()) return new Response<>(null, HttpStatus.BAD_REQUEST, "Revise los datos");
             Customer customer = _modelMapper.map(customerRequest, Customer.class);
+            _userService.save(customerRequest.getUserRequest());
             _addressService.save(customerRequest.getAddressRequest());
             _contactService.save(customerRequest.getContactRequest());
-            _userService.save(customerRequest.getUserRequest());
             customer = _customerRepository.save(customer);
             CustomerDto customerDto = _modelMapper.map(customer, CustomerDto.class);
             return new Response<>(customerDto, HttpStatus.OK, "Cliente guardado");
